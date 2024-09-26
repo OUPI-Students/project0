@@ -11,30 +11,34 @@ def read_binary_file(file_name):
 			chunks.append(format(ord(byte), '08b'))
 	return chunks
 
-# Generates 3 sub keys
+# Split the 12-bit main key into three 4-bit sub_keys
 def key_scheduler(main_key):
-	# Split the 12-bit main key into three 4-bit sub_keys
-	sub_keys = [main_key[i:i+4] for i in range(0, len(main_key), 4)]
+	key = str(main_key)
+	sub_keys = [key[i:i+4] for i in range(0, len(key), 4)]
 	return sub_keys
-	
-def xor_lists(contents, sub_key):
-    # Ensure both lists are of the same length
-    if len(contents) != len(sub_key):
-        raise ValueError("Both lists must be of the same length")
-
-    # Perform XOR operation
-    result = [int(a) ^ int(b) for a, b in zip(contents, sub_key)]
-    return result
 
 # XOR encryption
 def encrypt_block(contents, sub_key):
-	# Ensure both lists are of the same length
-	if len(contents) != len(sub_key):
-		raise ValueError("Both lists must be of the same length")
+	encrypted_contents = []
 	
-	# Perform XOR operation
-	result = [int(a) ^ int(b) for a, b in zip(contents, sub_key)]
-	return result
+	for i, content in enumerate(contents):
+		# Ensure the content and sub_key are valid binary strings
+		if len(content) != 8 or len(sub_key[i % len(sub_key)]) != 4:
+			raise ValueError("Contents must be 8-bit long and sub_keys must be 4-bit long.")
+			
+		# Convert binary strings to integers
+		content_int = int(content, 2)
+		sub_key_int = int(sub_key[i % len(sub_key)], 2)
+		
+		# Perform bitwise XOR
+		encrypted_value = content_int ^ sub_key_int
+		
+		# Convert back to binary string, ensuring it's 8 bits long
+		encrypted_binary = format(encrypted_value, '08b')
+		
+		encrypted_contents.append(encrypted_binary)
+		
+	return encrypted_contents
 
 # Feistel rounds
 # TESTME
@@ -50,14 +54,14 @@ def main():
 	print("\nReading file \"" + file_name + "\"...")
 	
 	# 12-bit key 'ACF' = 101011001111
+	# Potentially add custom key function
 	main_key = 101011001111
 	print(f"\nMain Key: \n{main_key}")
 	
 	# Sub keys
+	# Potentially add custom number of sub keys
 	sub_keys = key_scheduler(main_key)
-	print(f"\nSub keys: \n{sub_keys}")
-	# Sub keys appearing as [3863, 2289, 2447]
-	# Should be [1010, 1100, 1111]
+	print(f"\nSub Keys: \n{sub_keys}")
 	
 	# Data block
 	contents = read_binary_file(file_name)
@@ -68,14 +72,12 @@ def main():
 	encrypted_blocks = []
 	encrypted_block = encrypt_block(contents, sub_keys) # FIXME
 	encrypted_blocks.append(encrypted_block)
-	print(f"\nEncrypted Block with Sub-Key {bin(sub_key)}: \n{bin(encrypted_block)}")
-	# FIXME
+	print("\nEncrypted Data Block: ")
+	print(encrypted_block)
 	
-	# 3 rounds of Feistel network; move me to own function
-	for i in range(3):
-		left, right = feistel_round(left, right, sub_keys[i])
-		print(f"\nAfter Round {i+1} \n- Left: {bin(left)}, \n- Right: {bin(right)}")
 	return
+	
+	# Potentially add a decryption function
 
 # Calls main function
 if __name__ == "__main__":

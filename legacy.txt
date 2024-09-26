@@ -72,3 +72,7 @@ def key_scheduler(main_key):
 		sub_keys.append(subkey)
 	return sub_keys
 	
+	# Ensure both lists are of the same length
+	if len(contents) != len(sub_key):
+		raise ValueError("Both lists must be of the same length")
+	
