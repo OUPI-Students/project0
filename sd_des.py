@@ -11,7 +11,7 @@ def read_binary_file(file_name):
 		contents = file.read()
 	return contents
 
-# Reads file file_name and returns contents in usable 8-bit chunks
+# Reads file file_name and returns contents in a list of usable 8-bit chunks
 def read_binary_file_bits(file_name):
 	chunks = []
 	try:
@@ -26,17 +26,17 @@ def read_binary_file_bits(file_name):
 		print(f"An error occurred: {e}")
 	return chunks
 
-# Prints contents of file
+# Prints contents of the file as written
 contents = read_binary_file(file_name)
 print("Contents of read file:\n" + contents)
 
-# Prints contents of file in bits
+# Prints contents of the file in 8-bit chunks
 bits = read_binary_file_bits(file_name)
 print("Contents of read file in 8-bit chunks: ")
 print(bits)
 
 # Generates 3 sub keys
-# IDK why AI wants me to convert to hex, maybe delete?
+# IDK why AI wants me to convert to hex, maybe rework me?
 def key_scheduler(main_key):
 	# Convert the key to a hexadecimal string with 3 characters
 	key_hex = f"{main_key:03x}"
@@ -60,7 +60,7 @@ def encrypt_block(data_block, sub_key):
 	# TypeError: unsupported operand type(s) for ^: 'list' and 'list'
 	# https://www.geeksforgeeks.org/python-list-xor/
 
-# Feistel round
+# Feistel rounds
 def feistel_round(left, right, sub_key):
 	new_left = right
 	new_right = left ^ encrypt_block(right, sub_key) # IDK if this works
@@ -68,7 +68,7 @@ def feistel_round(left, right, sub_key):
 
 def main():
 	# Main key
-	main_key = 0b100110100111 # Can use randomly generated key
+	main_key = 0b100110100111 # Can use randomly generated key if needed
 	print(f"\nMain Key: {bin(main_key)}")
 	
 	#Sub keys
@@ -93,5 +93,5 @@ def main():
 		print(f"After Round {i+1} - Left: {bin(left)}, Right: {bin(right)}")
 	return
 
-if __name__ == "__main__": # FIXME?
+if __name__ == "__main__":
 	main()
