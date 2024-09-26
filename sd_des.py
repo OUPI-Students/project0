@@ -36,6 +36,7 @@ print("Contents of read file in 8-bit chunks: ")
 print(bits)
 
 # Generates 3 sub keys
+# IDK why AI wants me to convert to hex, maybe delete?
 def key_scheduler(main_key):
 	# Convert the key to a hexadecimal string with 3 characters
 	key_hex = f"{main_key:03x}"
