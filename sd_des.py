@@ -8,23 +8,13 @@ def read_binary_file(file_name):
 	return contents
 
 # Generates 3 sub keys
-# Need to keep this in binary FIXME
 def key_scheduler(main_key):
-	# Convert the key to a hexadecimal string with 3 characters
-	key_hex = f"{main_key:03x}"
-	print("key hex: ")
-	print(key_hex)
-	
-	# Convert each character to its decimal value
-	key_dec = [int(char, 16) for char in key_hex]
-	print("key dec: ")
-	print(key_dec)
-	
-	# Create the 3-round subkeys using bitwise XOR
-	k1 = key_dec[0] ^ key_dec[1]
-	k2 = key_dec[1] ^ key_dec[2]
-	k3 = key_dec[2] ^ key_dec[0]
-	return [k1, k2, k3]
+	# Extracts 4 bits of data from main_key per subkey
+	sub_keys = []
+	for i in range(3):
+		subkey = (main_key >> (i * 4)) & 0xFFF
+		sub_keys.append(subkey)
+	return sub_keys
 
 # XOR encryption
 def encrypt_block(data_block, sub_key):
@@ -43,28 +33,30 @@ def main():
 	# User inputs data
 	print("Input name of file to read: ")
 	file_name = input()
-	print("\nReading " + file_name + "...\n")
+	print("\nReading file <" + file_name + ">...\n")
 	
 	# Prints contents of the file as written
 	contents = read_binary_file(file_name)
-	print("Contents of read file:\n(contents)")
+	print("Contents of read file:\n" + contents)
 	
-	# Main key
-	main_key = 101011001111 # Can use randomly generated key if needed
-	print(f"\nMain Key: {bin(main_key)}")
+	# 12-bit key 'ACF' = 101011001111
+	# User inputs key
+	print("Input encryption key: ")
+	main_key = input()
+	print(f"Main Key: {bin(main_key)}")
 	
-	#Sub keys
+	# Sub keys
 	sub_keys = key_scheduler(main_key)
 	print(f"Sub keys: {sub_keys}")
 	
-	#Data block
+	# Data block
 	data_block = contents
 	print(f"Data Block: {data_block}") # FIXME?
 	# TypeError: 'str' object cannot be interpreted as an integer
 	
 	# Encrypts data using simple XOR encryption
 	encrypted_blocks = []
-	encrypted_block = encrypt_block(data_block, sub_keys)
+	encrypted_block = encrypt_block(data_block, sub_keys) # FIXME
 	encrypted_blocks.append(encrypted_block)
 	print(f"Encrypted Block with Sub-Key {bin(sub_key)}: {bin(encrypted_block)}")
 	# FIXME
