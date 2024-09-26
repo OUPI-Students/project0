@@ -2,13 +2,7 @@
 
 # Reads file file_name and returns contents in 8-bit chunks
 def read_binary_file(file_name):
-	chunks = []
-	with open(file_name, 'rb') as file:
-		while True:
-			byte = file.read(1)
-			if not byte:
-				break
-			chunks.append(format(ord(byte), '08b'))
+	chunks = [1110100] # FIXME
 	return chunks
 
 # Split the 12-bit main key into three 4-bit sub_keys
@@ -22,10 +16,6 @@ def encrypt_block(contents, sub_key):
 	encrypted_contents = []
 	
 	for i, content in enumerate(contents):
-		# Ensure the content and sub_key are valid binary strings
-		if len(content) != 8 or len(sub_key[i % len(sub_key)]) != 4:
-			raise ValueError("Contents must be 8-bit long and sub_keys must be 4-bit long.")
-			
 		# Convert binary strings to integers
 		content_int = int(content, 2)
 		sub_key_int = int(sub_key[i % len(sub_key)], 2)
@@ -39,13 +29,6 @@ def encrypt_block(contents, sub_key):
 		encrypted_contents.append(encrypted_binary)
 		
 	return encrypted_contents
-
-# Feistel rounds
-# TESTME
-def feistel_round(left, right, sub_key):
-	new_left = right
-	new_right = left ^ encrypt_block(right, sub_key) # IDK if this works
-	return new_left, new_right
 
 def main():
 	# User inputs data
@@ -70,15 +53,15 @@ def main():
 	
 	# Encrypts data using simple XOR encryption
 	encrypted_blocks = []
-	encrypted_block = encrypt_block(contents, sub_keys) # FIXME
+	encrypted_block = encrypt_block(contents, sub_keys)
 	encrypted_blocks.append(encrypted_block)
 	print("\nEncrypted Data Block: ")
 	print(encrypted_block)
 	
+	# Potentially add a decryption function
+	
 	return
 	
-	# Potentially add a decryption function
-
 # Calls main function
 if __name__ == "__main__":
 	main()
