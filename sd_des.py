@@ -2,7 +2,10 @@
 
 # Reads file file_name and returns contents in 8-bit chunks
 def read_binary_file(file_name):
-	chunks = ['1110100'] # FIXME
+	# chunks = ['1110100'] # For debugging
+	with open(file_name, 'r') as file:
+		data = file.read().strip()
+		chunks = [data[i:i + 8] for i in range(0,len(data), 8)]
 	return chunks
 
 # Split the 12-bit main key into three 4-bit sub_keys
@@ -19,6 +22,14 @@ def encrypt_block(contents, sub_keys):
 		# Simple XOR operation for the Feistel function
 		new_right = left ^ subkey
 		new_left = right
+		
+		# Debugging
+		print("\nCalculating XOR..." )
+		print(f"right: {right}")
+		print(f"left: {left}")
+		print(f"new_right: {new_right}")
+		print(f"new_left: {new_left}")
+		
 		return new_left, new_right
 	
 	encrypted_data = []
