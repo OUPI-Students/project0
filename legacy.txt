@@ -14,12 +14,16 @@ def read_binary_file_bits(file_name):
 		print(f"An error occurred: {e}")
 	return chunks
 
-
-
 	Prints contents of the file in 8-bit chunks
 	bits = read_binary_file_bits(file_name)
 	print("Contents of read file in 8-bit chunks: ")
 	print(bits)
+	
+	# Reads file file_name and returns contents in binary
+def read_binary_file(file_name):
+	with open(file_name, 'r') as file:
+		contents = file.read()
+	return contents
 	
 # Converting to hexidecimal not required
 # Generates 3 sub keys
@@ -52,4 +56,10 @@ def text_to_binary(user_key):
 	user_key = input()
 	main_key = text_to_binary(user_key)
 	print(f"\nMain Key: \n{main_key}")
+	
+	# XOR encryption
+def encrypt_block(contents, sub_key):
+	return contents ^ sub_key # FIXME
+	# TypeError: unsupported operand type(s) for ^: 'list' and 'list'
+	# https://www.geeksforgeeks.org/python-list-xor/
 	

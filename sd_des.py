@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-import random # for random key generation
 
 # Reads file file_name and returns contents in binary
 def read_binary_file(file_name):
 	with open(file_name, 'r') as file:
-		contents = file.read()
-	return contents
+		contents = file.read().strip()
+	# Split the binary string into 8 bit chunks
+	chunks = [contents[i:i+8] for i in range(0, len(contents), 8)]
+	return chunks
 
 # Generates 3 sub keys
 def key_scheduler(main_key):
@@ -16,12 +17,25 @@ def key_scheduler(main_key):
 		# TypeError: unsupported operand type(s) for >>: 'str' and 'int'
 		sub_keys.append(subkey)
 	return sub_keys
+	
+def xor_lists(contents, sub_key):
+    # Ensure both lists are of the same length
+    if len(contents) != len(sub_key):
+        raise ValueError("Both lists must be of the same length")
+
+    # Perform XOR operation
+    result = [int(a) ^ int(b) for a, b in zip(contents, sub_key)]
+    return result
 
 # XOR encryption
-def encrypt_block(data_block, sub_key):
-	return data_block ^ sub_key # FIXME
-	# TypeError: unsupported operand type(s) for ^: 'list' and 'list'
-	# https://www.geeksforgeeks.org/python-list-xor/
+def encrypt_block(contents, sub_key):
+	# Ensure both lists are of the same length
+	if len(contents) != len(sub_key):
+		raise ValueError("Both lists must be of the same length")
+	
+	# Perform XOR operation
+	result = [int(a) ^ int(b) for a, b in zip(contents, sub_key)]
+	return result
 
 # Feistel rounds
 # TESTME
@@ -34,38 +48,39 @@ def main():
 	# User inputs data
 	print("Input name of file to read: ")
 	file_name = input()
-	print("\nReading file ~" + file_name + "~...\n")
+	print("\nReading file ~" +file_name + "~...")
 	
 	# Prints contents of the file as written
 	contents = read_binary_file(file_name)
-	print("Contents of ~" + file_name + "~:\n" + contents)
+	# print("Contents of ~{file_name}~:" + contents)
+	# TypeError: can only concatenate str (not "list") to str
 	
 	# 12-bit key 'ACF' = 101011001111
 	main_key = 101011001111
 	print(f"\nMain Key: \n{main_key}")
 	
 	# Sub keys
-	sub_keys = key_scheduler(main_key)
-	print(f"Sub keys: {sub_keys}")
+	sub_keys = key_scheduler(main_key) # I am a list
+	print(f"\nSub keys: \n{sub_keys}")
 	# Sub keys appearing as [3863, 2289, 2447]
 	# Should be [1010, 1100, 1111]
 	
 	# Data block
-	data_block = contents
-	print(f"Data Block: {data_block}") # FIXME?
+	print("\nData Block: ") 
+	print(contents)
 	# TypeError: 'str' object cannot be interpreted as an integer
 	
 	# Encrypts data using simple XOR encryption
 	encrypted_blocks = []
-	encrypted_block = encrypt_block(data_block, sub_keys) # FIXME
+	encrypted_block = encrypt_block(contents, sub_keys) # FIXME
 	encrypted_blocks.append(encrypted_block)
-	print(f"Encrypted Block with Sub-Key {bin(sub_key)}: {bin(encrypted_block)}")
+	print(f"\nEncrypted Block with Sub-Key {bin(sub_key)}: \n{bin(encrypted_block)}")
 	# FIXME
 	
 	# 3 rounds of Feistel network; move me to own function
 	for i in range(3):
 		left, right = feistel_round(left, right, sub_keys[i])
-		print(f"After Round {i+1} - Left: {bin(left)}, Right: {bin(right)}")
+		print(f"\nAfter Round {i+1} \n- Left: {bin(left)}, \n- Right: {bin(right)}")
 	return
 
 # Calls main function
