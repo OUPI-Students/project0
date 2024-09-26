@@ -7,17 +7,17 @@ def read_binary_file(file_name):
 		contents = file.read()
 	return contents
 	
-# TESTME
-def text_to_binary(main_key)
-	binary_list = [format(ord(char), '08b') for char in text
-	return ' '.join(binary_list
+# Reads user input and converts to binary
+def text_to_binary(main_key):
+	binary = ' '.join(format(ord(char), '08b') for char in text)
+	return binary
 
 # Generates 3 sub keys
 def key_scheduler(main_key):
 	# Extracts 4 bits of data from main_key per subkey
 	sub_keys = []
 	for i in range(3):
-		subkey = (main_key >> (i * 4)) & 0xFFF
+		subkey = (main_key >> (i * 4)) & 0xFFF # FIXME
 		sub_keys.append(subkey)
 	return sub_keys
 
@@ -38,17 +38,17 @@ def main():
 	# User inputs data
 	print("Input name of file to read: ")
 	file_name = input()
-	print("\nReading file <" + file_name + ">...\n")
+	print("\nReading file ~" + file_name + "~...\n")
 	
 	# Prints contents of the file as written
 	contents = read_binary_file(file_name)
-	print("Contents of read file:\n" + contents)
+	print("Contents of ~" + file_name + "~:\n" + contents)
 	
 	# 12-bit key 'ACF' = 101011001111
 	# User inputs key
 	print("Input encryption key: ")
 	main_key = input()
-	print(f"Main Key: {bin(main_key)}")
+	print(f"Main Key: {main_key}")
 	
 	# Sub keys
 	sub_keys = key_scheduler(main_key)
