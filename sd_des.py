@@ -6,11 +6,6 @@ def read_binary_file(file_name):
 	with open(file_name, 'r') as file:
 		contents = file.read()
 	return contents
-	
-# Reads user input and converts to binary
-def text_to_binary(main_key):
-	binary = ' '.join(format(ord(char), '08b') for char in text)
-	return binary
 
 # Generates 3 sub keys
 def key_scheduler(main_key):
@@ -18,6 +13,7 @@ def key_scheduler(main_key):
 	sub_keys = []
 	for i in range(3):
 		subkey = (main_key >> (i * 4)) & 0xFFF # FIXME
+		# TypeError: unsupported operand type(s) for >>: 'str' and 'int'
 		sub_keys.append(subkey)
 	return sub_keys
 
@@ -45,14 +41,14 @@ def main():
 	print("Contents of ~" + file_name + "~:\n" + contents)
 	
 	# 12-bit key 'ACF' = 101011001111
-	# User inputs key
-	print("Input encryption key: ")
-	main_key = input()
-	print(f"Main Key: {main_key}")
+	main_key = 101011001111
+	print(f"\nMain Key: \n{main_key}")
 	
 	# Sub keys
 	sub_keys = key_scheduler(main_key)
 	print(f"Sub keys: {sub_keys}")
+	# Sub keys appearing as [3863, 2289, 2447]
+	# Should be [1010, 1100, 1111]
 	
 	# Data block
 	data_block = contents

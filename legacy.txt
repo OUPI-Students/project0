@@ -39,3 +39,17 @@ def key_scheduler(main_key):
 	k2 = key_dec[1] ^ key_dec[2]
 	k3 = key_dec[2] ^ key_dec[0]
 	return [k1, k2, k3]
+	
+# Save my brain, no key input today
+# Reads user input and converts to binary
+def text_to_binary(user_key):
+	binary = ' '.join(format(ord(char), '08b') for char in user_key)
+	return binary
+	
+	# 12-bit key 'ACF' = 101011001111
+	# User inputs key
+	print("Input encryption key: ")
+	user_key = input()
+	main_key = text_to_binary(user_key)
+	print(f"\nMain Key: \n{main_key}")
+	
