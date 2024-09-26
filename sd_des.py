@@ -2,10 +2,13 @@
 
 # Reads file file_name and returns contents in binary
 def read_binary_file(file_name):
-	with open(file_name, 'r') as file:
-		contents = file.read().strip()
-	# Split the binary string into 8 bit chunks
-	chunks = [contents[i:i+8] for i in range(0, len(contents), 8)]
+	chunks = []
+	with open(file_name, 'rb') as file:
+		while True:
+			byte = file.read(1)
+			if not byte:
+				break
+			chunks.append(format(ord(byte), '08b'))
 	return chunks
 
 # Generates 3 sub keys
