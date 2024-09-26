@@ -6,6 +6,11 @@ def read_binary_file(file_name):
 	with open(file_name, 'r') as file:
 		contents = file.read()
 	return contents
+	
+# TESTME
+def text_to_binary(main_key)
+	binary_list = [format(ord(char), '08b') for char in text
+	return ' '.join(binary_list
 
 # Generates 3 sub keys
 def key_scheduler(main_key):
@@ -23,7 +28,7 @@ def encrypt_block(data_block, sub_key):
 	# https://www.geeksforgeeks.org/python-list-xor/
 
 # Feistel rounds
-# Test this
+# TESTME
 def feistel_round(left, right, sub_key):
 	new_left = right
 	new_right = left ^ encrypt_block(right, sub_key) # IDK if this works
