@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-import random
-
-print("Input name of file to read: ")
-file_name = input()
-print("\nReading " + file_name + "...\n")
+import random # for random key generation
 
 # Reads file file_name and returns contents in binary
 def read_binary_file(file_name):
@@ -11,32 +7,8 @@ def read_binary_file(file_name):
 		contents = file.read()
 	return contents
 
-# Reads file file_name and returns contents in a list of usable 8-bit chunks
-def read_binary_file_bits(file_name):
-	chunks = []
-	try:
-		with open(file_name, 'rb') as file:
-			byte = file.read(9)
-			while byte:
-				chunks.append(byte)
-				byte = file.read(9)
-	except FileNotFoundError:
-		print(f"The file at {file_path} was not found.")
-	except Exception as e:
-		print(f"An error occurred: {e}")
-	return chunks
-
-# Prints contents of the file as written
-contents = read_binary_file(file_name)
-print("Contents of read file:\n" + contents)
-
-# Prints contents of the file in 8-bit chunks
-bits = read_binary_file_bits(file_name)
-print("Contents of read file in 8-bit chunks: ")
-print(bits)
-
 # Generates 3 sub keys
-# IDK why AI wants me to convert to hex, maybe rework me?
+# Need to keep this in binary FIXME
 def key_scheduler(main_key):
 	# Convert the key to a hexadecimal string with 3 characters
 	key_hex = f"{main_key:03x}"
@@ -61,14 +33,24 @@ def encrypt_block(data_block, sub_key):
 	# https://www.geeksforgeeks.org/python-list-xor/
 
 # Feistel rounds
+# Test this
 def feistel_round(left, right, sub_key):
 	new_left = right
 	new_right = left ^ encrypt_block(right, sub_key) # IDK if this works
 	return new_left, new_right
 
 def main():
+	# User inputs data
+	print("Input name of file to read: ")
+	file_name = input()
+	print("\nReading " + file_name + "...\n")
+	
+	# Prints contents of the file as written
+	contents = read_binary_file(file_name)
+	print("Contents of read file:\n(contents)")
+	
 	# Main key
-	main_key = 0b100110100111 # Can use randomly generated key if needed
+	main_key = 101011001111 # Can use randomly generated key if needed
 	print(f"\nMain Key: {bin(main_key)}")
 	
 	#Sub keys
@@ -76,7 +58,7 @@ def main():
 	print(f"Sub keys: {sub_keys}")
 	
 	#Data block
-	data_block = bits
+	data_block = contents
 	print(f"Data Block: {data_block}") # FIXME?
 	# TypeError: 'str' object cannot be interpreted as an integer
 	
@@ -93,5 +75,6 @@ def main():
 		print(f"After Round {i+1} - Left: {bin(left)}, Right: {bin(right)}")
 	return
 
+# Calls main function
 if __name__ == "__main__":
 	main()

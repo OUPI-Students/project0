@@ -1,0 +1,22 @@
+# Only one of these was necessary as they do the same thing
+# Reads file file_name and returns contents in a list of usable 8-bit chunks
+def read_binary_file_bits(file_name):
+	chunks = []
+	try:
+		with open(file_name, 'rb') as file:
+			byte = file.read(9)
+			while byte:
+				chunks.append(byte)
+				byte = file.read(9)
+	except FileNotFoundError:
+		print(f"The file at {file_path} was not found.")
+	except Exception as e:
+		print(f"An error occurred: {e}")
+	return chunks
+
+
+
+	Prints contents of the file in 8-bit chunks
+	bits = read_binary_file_bits(file_name)
+	print("Contents of read file in 8-bit chunks: ")
+	print(bits)
