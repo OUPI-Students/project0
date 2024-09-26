@@ -63,3 +63,12 @@ def encrypt_block(contents, sub_key):
 	# TypeError: unsupported operand type(s) for ^: 'list' and 'list'
 	# https://www.geeksforgeeks.org/python-list-xor/
 	
+def key_scheduler(main_key):
+	# Extracts 4 bits of data from main_key per subkey
+	sub_keys = []
+	for i in range(3):
+		subkey = (main_key >> (i * 4)) & 0xFFF # FIXME
+		# TypeError: unsupported operand type(s) for >>: 'str' and 'int'
+		sub_keys.append(subkey)
+	return sub_keys
+	

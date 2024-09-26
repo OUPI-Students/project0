@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Reads file file_name and returns contents in binary
+# Reads file file_name and returns contents in 8-bit chunks
 def read_binary_file(file_name):
 	chunks = []
 	with open(file_name, 'rb') as file:
@@ -13,12 +13,8 @@ def read_binary_file(file_name):
 
 # Generates 3 sub keys
 def key_scheduler(main_key):
-	# Extracts 4 bits of data from main_key per subkey
-	sub_keys = []
-	for i in range(3):
-		subkey = (main_key >> (i * 4)) & 0xFFF # FIXME
-		# TypeError: unsupported operand type(s) for >>: 'str' and 'int'
-		sub_keys.append(subkey)
+	# Split the 12-bit main key into three 4-bit sub_keys
+	sub_keys = [main_key[i:i+4] for i in range(0, len(main_key), 4)]
 	return sub_keys
 	
 def xor_lists(contents, sub_key):
@@ -51,27 +47,22 @@ def main():
 	# User inputs data
 	print("Input name of file to read: ")
 	file_name = input()
-	print("\nReading file ~" +file_name + "~...")
-	
-	# Prints contents of the file as written
-	contents = read_binary_file(file_name)
-	# print("Contents of ~{file_name}~:" + contents)
-	# TypeError: can only concatenate str (not "list") to str
+	print("\nReading file \"" + file_name + "\"...")
 	
 	# 12-bit key 'ACF' = 101011001111
 	main_key = 101011001111
 	print(f"\nMain Key: \n{main_key}")
 	
 	# Sub keys
-	sub_keys = key_scheduler(main_key) # I am a list
+	sub_keys = key_scheduler(main_key)
 	print(f"\nSub keys: \n{sub_keys}")
 	# Sub keys appearing as [3863, 2289, 2447]
 	# Should be [1010, 1100, 1111]
 	
 	# Data block
+	contents = read_binary_file(file_name)
 	print("\nData Block: ") 
 	print(contents)
-	# TypeError: 'str' object cannot be interpreted as an integer
 	
 	# Encrypts data using simple XOR encryption
 	encrypted_blocks = []
