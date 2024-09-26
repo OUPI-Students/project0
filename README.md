@@ -1,2 +1,4 @@
-## Scaled-Down DES Encryption/Decryption Algorithm ##
-# Requires: Python 3.x
+# Scaled-Down DES Encryption/Decryption Algorithm
+
+[!NOTE]
+Requires Python 3.x
