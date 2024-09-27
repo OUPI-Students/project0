@@ -1,10 +1,10 @@
-# read secret.txt and encode as ascii
-secret_message = input("Provide the file you would like to encrypt: ")
-f = open(secret_message, 'r')
-secret = f.read()
-encoded_secret = secret.encode('ascii')
+### Broken - Gives nonsense output. The issue seems to be with the feistel process. Any ideas? ###
+# read EncryptedMessage.txt and convert to list
+f = open("EncryptedMessage.txt", 'r')
+message = f.read()
+list_message = eval(message)
 
-# Function to split secret into four-bit segments
+# Function to split message into four-bit segments
 def split_byte(byte):
     left_bits = (byte & 0xF0) >> 4  # Left 4-bit 
     right_bits = byte & 0x0F  # Right 4-bit 
@@ -34,28 +34,28 @@ k = [
 	k2,
 	k3
     ]
-#print(f"{k1},{k2},{k3}")
+
+print(f"{k1},{k2},{k3}")
 
 # Split bytes for each character in secret and perform feistel process
-y = []
+z = []
 
-for i in encoded_secret:
+for i in list_message:
     right, left = split_byte(i)
-
+ 
         # 3-round Feistel process
-    for j in range(3):
+    for j in range(2,-1,-1):
         prev_left = left
         left = right
         right = prev_left ^ (right ^ k[j])
-	        
-    y.append((right << 4) + left)
-#print(y)
+        
+    z.append((right << 4) + left)
+print(z)
 
-# Convert y to a string and save it as a txt file
-string_text = str(y)
-print(string_text)
+#join list and convert to ascii characters
+decrypted_message = ''.join(chr(num) for num in z)
+print(decrypted_message)
 
-with open('EncryptedMessage.txt', 'w') as file:
-	file.write(string_text)
+
 
 
