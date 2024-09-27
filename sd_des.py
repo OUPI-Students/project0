@@ -22,20 +22,13 @@ def encrypt_block(contents, sub_keys):
 		# Simple XOR operation for the Feistel function
 		new_right = left ^ subkey
 		new_left = right
-		
-		# Debugging
-		print("\nCalculating XOR..." )
-		print(f"right: {right}")
-		print(f"left: {left}")
-		print(f"new_right: {new_right}")
-		print(f"new_left: {new_left}")
-		
 		return new_left, new_right
 	
 	encrypted_data = []
 	for byte in contents:
 		# Ensure byte is an integer
 		byte = int(byte, 2) if isinstance(byte, str) else byte
+		
 		# Split the byte into left and right 4-bit halves
 		left = (byte >> 4) & 0x0F
 		right = byte & 0x0F
@@ -46,8 +39,7 @@ def encrypt_block(contents, sub_keys):
 			
 		# Combine the left and right halves back into an 8-bit byte
 		encrypted_byte = (left << 4) | right
-		encrypted_data.append(encrypted_byte)
-		
+		encrypted_data.append(format(encrypted_byte, '08b'))	
 	return encrypted_data
 
 def main():
