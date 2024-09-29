@@ -1,4 +1,3 @@
-### Broken - Gives nonsense output. The issue seems to be with the feistel process. Any ideas? ###
 # read EncryptedMessage.txt and convert to list
 f = open("EncryptedMessage.txt", 'r')
 message = f.read()
