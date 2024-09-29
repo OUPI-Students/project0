@@ -40,20 +40,21 @@ k = [
 y = []
 
 for i in encoded_secret:
-    right, left = split_byte(i)
-
+    left, right = split_byte(i)
+    #print(f"left0: {left}, right0: {right}")
         # 3-round Feistel process
     for j in range(3):
         prev_left = left
         left = right
         right = prev_left ^ (right ^ k[j])
+        #print(f"left: {left},right: {right}")
 	        
     y.append((right << 4) + left)
 #print(y)
 
 # Convert y to a string and save it as a txt file
 string_text = str(y)
-print(string_text)
+#print(string_text)
 
 with open('EncryptedMessage.txt', 'w') as file:
 	file.write(string_text)
